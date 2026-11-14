@@ -96,29 +96,8 @@ int main(int argc, char *argv[])
         char client_ip[INET_ADDRSTRLEN];  
         inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
         printf("%s[INFO] Connection accepted from %s:%d%s\n", YELLOW, client_ip, ntohs(client_addr.sin_port), RESET);
-        
-        
-        /* Create a dedicated thread for the new client */
-        int *client_sock_ptr = malloc(sizeof(int));
-        if (client_sock_ptr == NULL)
-        {
-            perror("Malloc failed");
-            close(server_fd);
-            continue;
-        }
-
-        *client_sock_ptr = client_fd;
-        pthread_t tid;
-        if (pthread_create(&tid, NULL, client_handler, (void*)client_sock_ptr) != 0)
-        {
-            perror("Thread creation failed");
-            free(client_sock_ptr);
-            close(server_fd);
-        }
-        else
-        {
-            /* Detach the thread so it cleans up automatically upon exit */
-            pthread_detach(tid);
+    
+        client_handler(client_fd);
         }
     }   
 }

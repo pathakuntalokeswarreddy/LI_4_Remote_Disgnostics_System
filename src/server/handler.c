@@ -2,11 +2,8 @@
 #include "../../include/server.h"
 
 
-void *client_handler(void *arg)
+void client_handler(int client_fd)
 {
-    int client_fd = *(int *)arg;
-    free(arg);
-
     char request_buffer[8092];
     while(1)
     {
@@ -134,7 +131,6 @@ void *client_handler(void *arg)
             }  
         }
     }
-    return NULL;
 }
 
 
